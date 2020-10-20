@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everything S&P - The S&P Tracker</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="assets/css/index.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <!-- Resources -->
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/plugins/rangeSelector.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    
+
+        <!-- Styles -->
+    <style>
+        html{
+            scroll-behavior: smooth;
+        }
+        .container-fluid{
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        #chartdiv {
+            width: 100%;
+            height: 500px;
+            max-width: 100%;
+        }
+        #chartdiv2 {
+            width: 100%;
+            height: 500px;
+            max-width: 100%;
+        }
+        #controls {
+            overflow: hidden;
+            padding-bottom: 3px;
+        }
+        #heroImageText1{
+            font-weight: 700;
+            font-size: 40px;
+            color: #11394D;
+            letter-spacing: 2px;
+        }
+        #heroImageText2{
+            font-size: 20px;
+            color: #11394d;
+            letter-spacing: 2px;
+        }
+        #enterSymbolText{
+            font-weight: 700;
+            font-size: 22px;
+            color: #0D2833;
+            letter-spacing: 1px;
+            margin: auto;
+        }
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+            color: #fff;
+            background-color: #6CBDB3;
+        }
+        a{
+            color: #11394D;
+            font-weight: 700;
+        }
+        a:hover{
+            color: #6CBDB3;
+        }
+        
+    </style>
+</head>
+<body style="font-family: 'Roboto Slab', serif;">
+        
+        <!-- NavBar -->
+        <nav class="navbar fixed-top navbar-light bg-dark">
+            <div class="mx-auto">
+                <a class="navbar-brand" href="#" style="text-align: center;">
+                    <img src="assets/images/logo_new.png" width="40%" height="50%" alt="" loading="lazy">
+                </a>
+            </div>
+        </nav>
+
+
+        <section class="container" style="padding-top: 6%;">
+
+            <!-- Hero Image Section -->
+            <div class="row" >
+                <div class="col-5 my-auto">
+                    <p id="heroImageText1">Welcome to <span>Everything S&P!</span></p>
+                    <p id="heroImageText2">We provide you with all the charts and details you need to track your stock portfolio and make wise decisions!</p>
+                </div>
+                <div class="col-7 my-auto">
+                    <div id="heroImage">
+                        <img src="assets/images/heroImg.svg" style="width: 100%; height: 100%;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Name Input Section -->
+            <div class="row" style="padding-top: 2%; text-align: center;">
+                <div class="col-12">
+                    <p id="enterSymbolText">Enter the name or stock symbol of the S&P 500 company you want to track</p>
+                    <small>If your company is not in the dropdown list, please enter stock symbol only and click the 'Track Now' button</small>
+                </div>
+            </div>
+
+            <div class="row" style="padding-top: 1%;">
+                <div id="symbol" class="input-group mb-3  mx-auto" style="width: 25%;">
+                    <input list="companies" id="symbolInput" type="text" class="form-control" placeholder="Name / Symbol" aria-label="Stock Symbol" aria-describedby="button-addon2">
+                    <datalist id="companies" >
+                    </datalist>
+                    <div class="input-group-append">
+                        <a href="#stockDetails"><button  id="symbolButton" class="btn btn-outline-success" type="button" id="button-addon2" >Track Now!</button></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom: 1%;">
+                <div style="margin: auto; text-align: center;">
+                    <small style="color: red; font-weight: 700;">Due to restrictive nature of the FREE API, only 1 company stock information can be viewed per minute. After clicking, please wait for the data to be populated.</small>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom: 0%;">
+                <div class="mx-auto">
+                    <p style="color: black; font-weight: 700;">OR</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div id="symbol" class="input-group mb-3 mx-auto">
+                    <div class="input-group-append mx-auto">
+                        <a href="#stockDetailsTableau"><button  id="tableauButton" class="btn btn-outline-success" type="button" >Work with Tableau Workbook</button></a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Stock Information Section -->
+        <section style="background-color: rgba(243, 241, 241, 0.322);" id="stockDetails">
+
+            <section class="container-fluid">
+
+                <!-- Stock Name and Open Close Information -->
+                <div class="row" id="stockInfo" style="padding-top: 3%; display: none;">
+                    <div class="col-12" style="margin: auto; text-align: center;">
+                        <div style="font-weight: bold;">
+                            <p>
+                                <span id="stockInfoName" style="color: black; padding-right: 1%;font-size: 30px;"></span>
+                                <span id="stockInfoSymbol" style="color: #547382; padding-right: 1%;"></span>
+                            </p>
+                            <p> 
+                                <span class="badge badge-pill badge-primary" style="margin-right: 1%;">Date</span><span id="stockInfoDate" style="padding-right: 1%;"></span>
+                                -->&nbsp;&nbsp;&nbsp;
+                                <span class="badge badge-pill badge-warning" style="margin-right: 1%;">Open</span><span id="stockInfoOpen" style="padding-right: 3%;"></span>
+                                <span class="badge badge-pill badge-success" style="margin-right: 1%;">High</span><span id="stockInfoHigh" style="padding-right: 3%;"></span>
+                                <span class="badge badge-pill badge-danger" style="margin-right: 1%;">Low</span><span id="stockInfoLow" style="padding-right: 3%;"></span>
+                                <span class="badge badge-pill badge-info" style="margin-right: 1%;">Close</span><span id="stockInfoClose" style="padding-right: 3%;"></span>
+                            </p> 
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                
+                <div class="row" id="stockInfoTableChart1" style="margin-top: 8%; margin-bottom: 8%;display: none;">
+
+                    <!-- Stock Company Info Table 1 -->
+                    <div class="col-3 my-auto" >
+                        <p style="text-align: center; font-weight: bold;">Company Info <img src="assets/images/arrow_down_2.png" style="width: 5%; height: 5%;"></p>
+                        <div style="border: 1px solid rgba(172, 171, 171, 0.418); border-radius: 5px; padding: 5%; box-shadow:1px 1px 1px rgba(128, 128, 128, 0.596);">
+                            <div class="row">
+                                <div class="col-4">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">Exchange</span>
+                                </div>
+                                <div class="col-8">
+                                    <span id="stockInfoExchange" style=" padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-4">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">Currency</span>
+                                </div>
+                                <div class="col-8">
+                                    <span id="stockInfoCurrency" style=" padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-4">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">Country</span>
+                                </div>
+                                <div class="col-8">
+                                    <span id="stockInfoCountry" style="padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" >
+                                <div class="col-4">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">Sector</span>
+                                </div>
+                                <div class="col-8">
+                                    <span id="stockInfoSector" style="padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-4">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">Industry</span>
+                                    </div>
+                                    <div class="col-8"> 
+                                    <span id="stockInfoIndustry" style="padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" >
+                                <div class="col-4">
+                                    <span class="badge badge-dark"  style="background-color:#11394D;">Address</span>
+                                </div>
+                                <div class="col-8">
+                                    <span id="stockInfoAddress" style="padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stock Chart 1 -->
+                    <div class="col-9">
+                        <div id="controls"></div>
+                        <div id="chartdiv"></div>
+                    </div>
+                </div>
+                
+                <hr>
+
+                <div class="row" id="stockInfoTableChart2" style="margin-top: 8%; padding-bottom: 8%; display: none;">
+
+                    <!-- Stock Chart 2 -->
+                    <div class="col-9">
+                        <div id="controls2" style="width: 100%; overflow: hidden;display: none;">
+                            <div style="float: left; margin-left: 15px;">
+                                From: <input type="text" id="fromfield" class="amcharts-input" />
+                                To: <input type="text" id="tofield" class="amcharts-input" />
+                            </div>
+                            <div style="float: right; margin-right: 15px;">
+                                <button id="b1m" class="amcharts-input">1m</button>
+                                <button id="b3m" class="amcharts-input">3m</button>
+                                <button id="b6m" class="amcharts-input">6m</button>
+                                <button id="b1y" class="amcharts-input">1y</button>
+                                <button id="bytd" class="amcharts-input">YTD</button>
+                                <button id="bmax" class="amcharts-input">MAX</button>
+                            </div>
+                        </div>
+                        <div id="chartdiv2" style="display: none;"></div>
+                    </div>
+
+                    <!-- Stock Technical Info Table 2 -->
+                    <div class="col-3 my-auto">
+                        <p style="text-align: center; font-weight: bold;">Technicals <img src="assets/images/arrow_down_2.png" style="width: 5%; height: 5%;"></p>
+                        <div style="border: 1px solid rgba(172, 171, 171, 0.418); border-radius: 5px; padding: 5%; box-shadow:1px 1px 1px rgba(128, 128, 128, 0.596);">
+                            <div class="row">
+                                <div class="col-7">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">Beta</span>
+                                </div>
+                                <div class="col-5">
+                                    <span id="stockInfoBeta" style=" padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-7">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">52 Week High</span>
+                                </div>
+                                <div class="col-5">
+                                    <span id="stockInfo52WeekHigh" style=" padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-7">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">52 Week Low</span>
+                                </div>
+                                <div class="col-5">
+                                    <span id="stockInfo52WeekLow" style="padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" >
+                                <div class="col-7">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">50 Day Moving Average</span>
+                                </div>
+                                <div class="col-5">
+                                    <span id="stockInfo50DayMovingAverage" style="padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" >
+                                <div class="col-7">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">200 Day Moving Average</span>
+                                </div>
+                                <div class="col-5">
+                                    <span id="stockInfo200DayMovingAverage" style="padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" >
+                                <div class="col-7">
+                                    <span class="badge badge-dark" style="background-color:#11394D;">Market Capitalization</span>
+                                </div>
+                                <div class="col-5">
+                                    <span id="stockInfoMarketCapitalization" style="padding-top: 2%;font-size: 13px;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+        </section>
+
+        <!-- Other Key Metrics Section -->
+        <section>
+
+            <section  class="container-fluid" style="margin-bottom: 4%;">
+
+                <div id="otherKeyMetrics" class="row" style="display: none; ">
+                    <div class="col-12">
+                        <h5 style="text-align: center; margin-bottom: 4%; margin-top: 2%; "><span style="border-bottom: 1px dotted  black; padding: 5px">Other Key Metrics</span></h5>
+                    </div>
+                    <div class="col-12">
+                          <ul class="nav nav-pills nav-justified">
+                            <li class="nav-item" >
+                              <a class="nav-link active" id="ratios-tab" data-toggle="tab" href="#ratios" role="tab" aria-controls="ratios" aria-selected="true">Ratios</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="pe-tab" data-toggle="tab" href="#pe" role="tab" aria-controls="pe" aria-selected="false">P/E</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="accounts-tab" data-toggle="tab" href="#accounts" role="tab" aria-controls="accounts" aria-selected="false">Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="margins-tab" data-toggle="tab" href="#margins" role="tab" aria-controls="margins" aria-selected="false">Margins</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="growth-tab" data-toggle="tab" href="#growth" role="tab" aria-controls="growth" aria-selected="false">Growth Rates</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="dividends-tab" data-toggle="tab" href="#dividends" role="tab" aria-controls="dividends" aria-selected="false">Dividends</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="holdings-tab" data-toggle="tab" href="#holdings" role="tab" aria-controls="holdings" aria-selected="false">Holdings</a>
+                            </li>
+                          </ul>
+                          
+                          <div class="tab-content">
+                            <div class="tab-pane active" id="ratios" role="tabpanel" aria-labelledby="ratios-tab">
+                                <div class="row" style="margin-top: 1%;">
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3  mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">EPS</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoEPS" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 " style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"> <span class="badge badge-dark" style="background-color:#11394D;">Revenue Per Share TTM</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoRevenuePerShareTTM" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"> <span class="badge badge-dark" style="background-color:#11394D;">Diluted EPS TTM</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoDilutedEPSTTM" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"> <span class="badge badge-dark" style="background-color:#11394D;">Dividend Per Share</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoDividendPerShare" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"> <span class="badge badge-dark" style="background-color:#11394D;">Book Value</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoBookValue" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="pe" role="tabpanel" aria-labelledby="pe-tab">
+                                <div class="row" style="margin-top: 1%;">
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">PE Ratio</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoPERatio" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">PEG Ratio</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoPEGRatio" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Trailing PE</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoTrailingPE" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Forward PE</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoForwardPE" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">EV To Revenue</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoEVToRevenue" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">EV To EBITDA</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoEVToEBITDA" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Price To Sales Ratio TTM</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoPriceToSalesRatioTTM" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Price To Book Ratio</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoPriceToBookRatio" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="accounts" role="tabpanel" aria-labelledby="accounts-tab">
+                                <div class="row" style="margin-top: 1%;">
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Revenue TTM</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoRevenueTTM" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">EBITDA</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoEBITDA" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="margins" role="tabpanel" aria-labelledby="margins-tab">
+                                <div class="row" style="margin-top: 1%;">
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Profit Margin</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoProfitMargin" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Gross Profit TTM</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoGrossProfitTTM" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Operating Margin TTM</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoOperatingMarginTTM" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Return On Assets TTM</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoReturnOnAssetsTTM" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Return On Equity TTM</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoReturnOnEquityTTM" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="growth" role="tabpanel" aria-labelledby="growth-tab">
+                                <div class="row" style="margin-top: 1%;">
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Quarterly Earnings Growth YOY</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoQuarterlyEarningsGrowthYOY" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Quarterly Revenue Growth YOY</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoQuarterlyRevenueGrowthYOY" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="dividends" role="tabpanel" aria-labelledby="dividends-tab">
+                                <div class="row" style="margin-top: 1%;">
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Dividend Per Share</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoDividendPerShare2" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Forward Annual Dividend Rate</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoForwardAnnualDividendRate" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Forward Annual Dividend Yield</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoForwardAnnualDividendYield" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Payout Ratio</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoPayoutRatio" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Dividend Date</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoDividendDate" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Ex Dividend Date</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoExDividendDate" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Dividend Yield</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoDividendYield" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="holdings" role="tabpanel" aria-labelledby="holdings-tab">
+                                <div class="row" style="margin-top: 1%;">
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Shares Outstanding</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoSharesOutstanding" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Percent Insiders</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoPercentInsiders" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3" style="border-right: 1px solid rgba(128, 128, 128, 0.425); margin-top: 3%;">
+                                        <div class="card border-dark mb-3 mx-auto" style="max-width: 18rem;">
+                                            <div class="card-header" style="text-align: center;"><span class="badge badge-dark" style="background-color:#11394D;">Percent Institutions</span></div>
+                                            <div class="card-body text-dark">
+                                              <p class="card-text" id="stockInfoPercentInstitutions" style="text-align: center;"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                          
+                          <script>
+                            $(function () {
+                              $('#myTab li:last-child a').tab('show')
+                            })
+                          </script>
+                    </div>
+                </div>
+                
+            </section>
+
+        </section>
+
+        <section id="stockDetailsTableau" style="display: none;">
+            <section class="container-fluid">
+                <div  class="row">
+                    <div class="col-12">
+                        <h5 style="text-align: center; margin-bottom: 4%;"><span style="border-bottom: 1px dotted  black; padding: 5px">Stock Information Table Workbook</span></h5>
+                    </div>
+                    <div class="col-12">
+                        <div>
+                            <div class='tableauPlaceholder mx-auto' id='viz1602843575220' style='position: relative;'>
+                                <noscript>
+                                    <a href='https:&#47;&#47;www.everythingsnp.com&#47;'>
+                                        <img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;SP&#47;SP500ALL_16028422534690&#47;SPTracker&#47;1_rss.png' style='border: none' />
+                                    </a>
+                                </noscript>
+                                <object class='tableauViz'  style='display:none;'>
+                                    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> 
+                                    <param name='embed_code_version' value='3' /> 
+                                    <param name='site_root' value='' />
+                                    <param name='name' value='SP500ALL_16028422534690&#47;SPTracker' />
+                                    <param name='tabs' value='no' />
+                                    <param name='toolbar' value='yes' />
+                                    <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;SP&#47;SP500ALL_16028422534690&#47;SPTracker&#47;1.png' /> 
+                                    <param name='animate_transition' value='yes' />
+                                    <param name='display_static_image' value='yes' />
+                                    <param name='display_spinner' value='yes' />
+                                    <param name='display_overlay' value='yes' />
+                                    <param name='display_count' value='yes' />
+                                    <param name='language' value='en-GB' />
+                                    <param name='filter' value='publish=yes' />
+                                </object>
+                            </div> 
+                            <script type='text/javascript'>                    
+                                var divElement = document.getElementById('viz1602843575220');                    
+                                var vizElement = divElement.getElementsByTagName('object')[0];                    
+                                vizElement.style.width='1000px';vizElement.style.height='827px';                    
+                                var scriptElement = document.createElement('script');                    
+                                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    
+                                vizElement.parentNode.insertBefore(scriptElement, vizElement);                
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    
+</body>
+
+
+<script>
+    var nameArray = ["Microsoft Corporation-MSFT", "Apple Inc.-AAPL", "Amazon.com Inc.-AMZN", "Facebook Inc. Class A-FB", "Berkshire Hathaway Inc. Class B-BRK.B", "JPMorgan Chase & Co.-JPM", "Alphabet Inc. Class C-GOOG", "Alphabet Inc. Class A-GOOGL", "Johnson & Johnson-JNJ", "Procter & Gamble Company-PG", "Visa Inc. Class A-V", "Exxon Mobil Corporation-XOM", "AT&T Inc.-T", "Bank of America Corp-BAC", "Home Depot Inc.-HD", "Intel Corporation-INTC", "Verizon Communications Inc.-VZ", "Mastercard Incorporated Class A-MA", "Walt Disney Company-DIS", "UnitedHealth Group Incorporated-UNH", "Chevron Corporation-CVX", "Merck & Co. Inc.-MRK", "Comcast Corporation Class A-CMCSA", "Coca Cola Company-KO", "Wells Fargo & Company-WFC", "Pfizer Inc.-PFE", "Cisco Systems Inc.-CSCO", "PepsiCo Inc.-PEP", "Boeing Company-BA", "Walmart Inc.-WMT", "Citigroup Inc.-C", "McDonald's Corporation-MCD", "Abbott Laboratories-ABT", "Medtronic Plc-MDT", "salesforce.com inc.-CRM", "Adobe Inc.-ADBE", "Costco Wholesale Corporation-COST", "Philip Morris International Inc.-PM", "PayPal Holdings Inc-PYPL", "NVIDIA Corporation-NVDA", "Honeywell International Inc.-HON", "Amgen Inc.-AMGN", "Union Pacific Corporation-UNP", "Netflix Inc.-NFLX", "International Business Machines Corporation-IBM", "Oracle Corporation-ORCL", "Thermo Fisher Scientific Inc.-TMO", "Accenture Plc Class A-ACN", "NextEra Energy Inc.-NEE", "United Technologies Corporation-UTX", "Broadcom Inc.-AVGO", "NIKE Inc. Class B-NKE", "AbbVie Inc.-ABBV", "Texas Instruments Incorporated-TXN", "Linde plc-LIN", "Starbucks Corporation-SBUX", "QUALCOMM Incorporated-QCOM", "American Tower Corporation-AMT", "3M Company-MMM", "Eli Lilly and Company-LLY", "Lockheed Martin Corporation-LMT", "Bristol Myers Squibb Company-BMY", "Booking Holdings Inc.-BKNG", "Altria Group Inc-MO", "Danaher Corporation-DHR", "Lowe's Companies Inc.-LOW", "CVS Health Corporation-CVS", "U.S. Bancorp-USB", "United Parcel Service Inc. Class B-UPS", "American Express Company-AXP", "Gilead Sciences Inc.-GILD", "Fidelity National Information Services Inc.-FIS", "Caterpillar Inc.-CAT", "General Electric Company-GE", "Mondelez International Inc. Class A-MDLZ", "Charter Communications Inc. Class A-CHTR", "Celgene Corporation-CELG", "CME Group Inc. Class A-CME", "TJX Companies Inc-TJX", "Automatic Data Processing Inc.-ADP", "Goldman Sachs Group Inc.-GS", "Duke Energy Corporation-DUK", "Chubb Limited-CB", "Stryker Corporation-SYK", "Dominion Energy Inc-D", "Anthem Inc.-ANTM", "Intuit Inc.-INTU", "Becton Dickinson and Company-BDX", "PNC Financial Services Group Inc.-PNC", "Cigna Corporation-CI", "Southern Company-SO", "Intuitive Surgical Inc.-ISRG", "ConocoPhillips-COP", "S&P Global Inc.-SPGI", "Zoetis Inc. Class A-ZTS", "Raytheon Company-RTN", "Colgate Palmolive Company-CL", "Crown Castle International Corp-CCI", "Morgan Stanley-MS", "Fiserv Inc.-FISV", "CSX Corporation-CSX", "Prologis Inc.-PLD", "Allergan plc-AGN", "Boston Scientific Corporation-BSX", "Target Corporation-TGT", "Deere & Company-DE", "Northrop Grumman Corporation-NOC", "BlackRock Inc.-BLK", "Biogen Inc.-BIIB", "Micron Technology Inc.-MU", "Intercontinental Exchange Inc.-ICE", "Applied Materials Inc.-AMAT", "Phillips 66-PSX", "Illinois Tool Works Inc.-ITW", "DuPont de Nemours Inc.-DD", "Vertex Pharmaceuticals Incorporated-VRTX", "Norfolk Southern Corporation-NSC", "Marsh & McLennan Companies Inc.-MMC", "Global Payments Inc.-GPN", "Schlumberger NV-SLB", "Ecolab Inc.-ECL", "Equinix Inc.-EQIX", "Simon Property Group Inc.-SPG", "Charles Schwab Corporation-SCHW", "Edwards Lifesciences Corporation-EW", "Sherwin Williams Company-SHW", "Air Products and Chemicals Inc.-APD", "American Electric Power Company Inc.-AEP", "General Motors Company-GM", "Kimberly Clark Corporation-KMB", "American International Group Inc.-AIG", "L3Harris Technologies Inc-LHX", "Marathon Petroleum Corporation-MPC", "Exelon Corporation-EXC", "Aon plc-AON", "Capital One Financial Corporation-COF", "Waste Management Inc.-WM", "Emerson Electric Co.-EMR", "Illumina Inc.-ILMN", "Activision Blizzard Inc.-ATVI", "Walgreens Boots Alliance Inc-WBA", "EOG Resources Inc.-EOG", "Estee Lauder Companies Inc. Class A-EL", "Dollar General Corporation-DG", "Valero Energy Corporation-VLO", "BB&T Corporation-BBT", "Sysco Corporation-SYY", "General Dynamics Corporation-GD", "Ross Stores Inc.-ROST", "Progressive Corporation-PGR", "Bank of New York Mellon Corporation-BK", "Kinder Morgan Inc Class P-KMI", "Analog Devices Inc.-ADI", "Baxter International Inc.-BAX", "Aflac Incorporated-AFL", "Sempra Energy-SRE", "Lam Research Corporation-LRCX", "Humana Inc.-HUM", "Occidental Petroleum Corporation-OXY", "FedEx Corporation-FDX", "Dow Inc.-DOW", "Prudential Financial Inc.-PRU", "MetLife Inc.-MET", "Eaton Corp. Plc-ETN", "Welltower Inc.-WELL", "Advanced Micro Devices Inc.-AMD", "Allstate Corporation-ALL", "Moody's Corporation-MCO", "Public Storage-PSA", "Roper Technologies Inc.-ROP", "Marriott International Inc. Class A-MAR", "Ford Motor Company-F", "Travelers Companies Inc.-TRV", "Johnson Controls International plc-JCI", "O'Reilly Automotive Inc.-ORLY", "HCA Healthcare Inc-HCA", "Cognizant Technology Solutions Corporation Class A-CTSH", "Xcel Energy Inc.-XEL", "Yum! Brands Inc.-YUM", "Constellation Brands Inc. Class A-STZ", "Newmont Goldcorp Corporation-NEM", "Autodesk Inc.-ADSK", "TE Connectivity Ltd.-TEL", "Public Service Enterprise Group Inc-PEG", "Delta Air Lines Inc.-DAL", "Consolidated Edison Inc.-ED", "AvalonBay Communities Inc.-AVB", "Equity Residential-EQR", "SunTrust Banks Inc.-STI", "General Mills Inc.-GIS", "Amphenol Corporation Class A-APH", "ONEOK Inc.-OKE", "WEC Energy Group Inc-WEC", "PPG Industries Inc.-PPG", "Ingersoll Rand Plc-IR", "Electronic Arts Inc.-EA", "eBay Inc.-EBAY", "Cummins Inc.-CMI", "Hilton Worldwide Holdings Inc-HLT", "Williams Companies Inc.-WMB", "IHS Markit Ltd.-INFO", "AutoZone Inc.-AZO", "SBA Communications Corp. Class A-SBAC", "Southwest Airlines Co.-LUV", "Digital Realty Trust Inc.-DLR", "Eversource Energy-ES", "V.F. Corporation-VFC", "Zimmer Biomet Holdings Inc.-ZBH", "Dollar Tree Inc.-DLTR", "KLA Corporation-KLAC", "McKesson Corporation-MCK", "Motorola Solutions Inc.-MSI", "Paychex Inc.-PAYX", "IQVIA Holdings Inc-IQV", "T. Rowe Price Group-TROW", "PACCAR Inc-PCAR", "TransDigm Group Incorporated-TDG", "FirstEnergy Corp.-FE", "T Mobile US Inc.-TMUS", "HP Inc.-HPQ", "FleetCor Technologies Inc.-FLT", "Discover Financial Services-DFS", "Realty Income Corporation-O", "State Street Corporation-STT", "Regeneron Pharmaceuticals Inc.-REGN", "Parker Hannifin Corporation-PH", "Ventas Inc.-VTR", "Verisk Analytics Inc-VRSK", "Xilinx Inc.-XLNX", "PPL Corporation-PPL", "Entergy Corporation-ETR", "Ball Corporation-BLL", "Corning Inc-GLW", "Willis Towers Watson Public Limited Company-WLTW", "Edison International-EIX", "Alexion Pharmaceuticals Inc.-ALXN", "LyondellBasell Industries NV-LYB", "Twitter Inc.-TWTR", "DTE Energy Company-DTE", "Agilent Technologies Inc.-A", "Tyson Foods Inc. Class A-TSN", "IDEXX Laboratories Inc.-IDXX", "Aptiv PLC-APTV", "Archer Daniels Midland Company-ADM", "Stanley Black & Decker Inc.-SWK", "Cintas Corporation-CTAS", "Microchip Technology Incorporated-MCHP", "Northern Trust Corporation-NTRS", "Monster Beverage Corporation-MNST", "American Water Works Company Inc.-AWK", "Pioneer Natural Resources Company-PXD", "Synchrony Financial-SYF", "Weyerhaeuser Company-WY", "Hershey Company-HSY", "Essex Property Trust Inc.-ESS", "Fastenal Company-FAST", "Cerner Corporation-CERN", "Fifth Third Bancorp-FITB", "Hewlett Packard Enterprise Co.-HPE", "Las Vegas Sands Corp.-LVS", "M&T Bank Corporation-MTB", "Rockwell Automation Inc.-ROK", "ResMed Inc.-RMD", "Hartford Financial Services Group Inc.-HIG", "Synopsys Inc.-SNPS", "AMETEK Inc.-AME", "United Airlines Holdings Inc.-UAL", "Kroger Co.-KR", "Fortive Corp.-FTV", "Chipotle Mexican Grill Inc.-CMG", "Corteva Inc-CTVA", "VeriSign Inc.-VRSN", "Centene Corporation-CNC", "Ameriprise Financial Inc.-AMP", "McCormick & Company Incorporated-MKC", "Vulcan Materials Company-VMC", "Clorox Company-CLX", "Royal Caribbean Cruises Ltd.-RCL", "Boston Properties Inc.-BXP", "Expedia Group Inc.-EXPE", "Keysight Technologies Inc-KEYS", "Ameren Corporation-AEE", "MSCI Inc. Class A-MSCI", "ANSYS Inc.-ANSS", "Church & Dwight Co. Inc.-CHD", "Cadence Design Systems Inc.-CDNS", "KeyCorp-KEY", "Republic Services Inc.-RSG", "First Republic Bank-FRC", "CDW Corp.-CDW", "CMS Energy Corporation-CMS", "D.R. Horton Inc.-DHI", "Western Digital Corporation-WDC", "HCP Inc.-HCP", "Alexandria Real Estate Equities Inc.-ARE", "Halliburton Company-HAL", "Carnival Corporation-CCL", "CBRE Group Inc. Class A-CBRE", "Align Technology Inc.-ALGN", "Lennar Corporation Class A-LEN", "Kraft Heinz Company-KHC", "Hess Corporation-HES", "Mettler Toledo International Inc.-MTD", "Best Buy Co. Inc.-BBY", "Cincinnati Financial Corporation-CINF", "International Paper Company-IP", "Copart Inc.-CPRT", "Martin Marietta Materials Inc.-MLM", "Omnicom Group Inc-OMC", "Equifax Inc.-EFX", "Arthur J. Gallagher & Co.-AJG", "Nucor Corporation-NUE", "Regions Financial Corporation-RF", "Laboratory Corporation of America Holdings-LH", "Citizens Financial Group Inc.-CFG", "Amcor PLC-AMCR", "CarMax Inc.-KMX", "Maxim Integrated Products Inc.-MXIM", "Skyworks Solutions Inc.-SWKS", "Mid-America Apartment Communities Inc.-MAA", "Celanese Corporation-CE", "Kellogg Company-K", "Dover Corporation-DOV", "Huntington Bancshares Incorporated-HBAN", "Evergy Inc.-EVRG", "Genuine Parts Company-GPC", "Xylem Inc.-XYL", "Teleflex Incorporated-TFX", "Cardinal Health Inc.-CAH", "CenterPoint Energy Inc.-CNP", "Freeport-McMoRan Inc.-FCX", "MGM Resorts International-MGM", "Akamai Technologies Inc.-AKAM", "Waters Corporation-WAT", "Baker Hughes Company Class A-BKR", "Kansas City Southern-KSU", "UDR Inc.-UDR", "Diamondback Energy Inc.-FANG", "Extra Space Storage Inc.-EXR", "Ulta Beauty Inc-ULTA", "Broadridge Financial Solutions Inc.-BR", "Principal Financial Group Inc.-PFG", "WellCare Health Plans Inc.-WCG", "W.W. Grainger Inc.-GWW", "Take Two Interactive Software Inc.-TTWO", "Cooper Companies Inc.-COO", "Incyte Corporation-INCY", "Darden Restaurants Inc.-DRI", "Seagate Technology PLC-STX", "Quest Diagnostics Incorporated-DGX", "NetApp Inc.-NTAP", "Arista Networks Inc.-ANET", "Loews Corporation-L", "AmerisourceBergen Corporation-ABC", "Concho Resources Inc.-CXO", "Atmos Energy Corporation-ATO", "Conagra Brands Inc.-CAG", "Citrix Systems Inc.-CTXS", "Gartner Inc.-IT", "MarketAxess Holdings Inc.-MKTX", "Masco Corporation-MAS", "Symantec Corporation-SYMC", "Expeditors International of Washington Inc.-EXPD", "Westinghouse Air Brake Technologies Corporation-WAB", "International Flavors & Fragrances Inc.-IFF", "Jacobs Engineering Group Inc.-JEC", "Cboe Global Markets Inc-CBOE", "Hologic Inc.-HOLX", "NVR Inc.-NVR", "Garmin Ltd.-GRMN", "Alliant Energy Corp-LNT", "CenturyLink Inc.-CTL", "Duke Realty Corporation-DRE", "Lincoln National Corporation-LNC", "C.H. Robinson Worldwide Inc.-CHRW", "J.M. Smucker Company-SJM", "American Airlines Group Inc.-AAL", "Host Hotels & Resorts Inc.-HST", "DENTSPLY SIRONA Inc.-XRAY", "IDEX Corporation-IEX", "Advance Auto Parts Inc.-AAP", "CBS Corporation Class B-CBS", "Brown Forman Corporation Class B-BF.B", "Wynn Resorts Limited-WYNN", "Tractor Supply Company-TSCO", "Fortinet Inc.-FTNT", "Regency Centers Corporation-REG", "Nasdaq Inc.-NDAQ", "Fox Corporation Class A-FOXA", "SVB Financial Group-SIVB", "Universal Health Services Inc. Class B-UHS", "Norwegian Cruise Line Holdings Ltd.-NCLH", "AES Corporation-AES", "Hasbro Inc.-HAS", "FMC Corporation-FMC", "Hormel Foods Corporation-HRL", "Lamb Weston Holdings Inc.-LW", "Varian Medical Systems Inc.-VAR", "Textron Inc.-TXT", "Leidos Holdings Inc.-LDOS", "Arconic Inc.-ARNC", "Avery Dennison Corporation-AVY", "Molson Coors Brewing Company Class B-TAP", "Jack Henry & Associates Inc.-JKHY", "Allegion PLC-ALLE", "Pinnacle West Capital Corporation-PNW", "Eastman Chemical Company-EMN", "Tiffany & Co.-TIF", "Western Union Company-WU", "United Rentals Inc.-URI", "Packaging Corporation of America-PKG", "Raymond James Financial Inc.-RJF", "NiSource Inc-NI", "PulteGroup Inc.-PHM", "NRG Energy Inc.-NRG", "Vornado Realty Trust-VNO", "CF Industries Holdings Inc.-CF", "Everest Re Group Ltd.-RE", "Whirlpool Corporation-WHR", "J.B. Hunt Transport Services Inc.-JBHT", "Noble Energy Inc.-NBL", "E*TRADE Financial Corporation-ETFC", "Comerica Incorporated-CMA", "LKQ Corporation-LKQ", "Iron Mountain Inc.-IRM", "WestRock Company-WRK", "Federal Realty Investment Trust-FRT", "Globe Life Inc.-GL", "Marathon Oil Corporation-MRO", "Mylan N.V.-MYL", "PerkinElmer Inc.-PKI", "Qorvo Inc.-QRVO", "Henry Schein Inc.-HSIC", "Snap on Incorporated-SNA", "Huntington Ingalls Industries Inc.-HII", "TechnipFMC Plc-FTI", "Discovery Inc. Class C-DISCK", "Alaska Air Group Inc.-ALK", "Kimco Realty Corporation-KIM", "HollyFrontier Corporation-HFC", "Devon Energy Corporation-DVN", "Mohawk Industries Inc.-MHK", "Juniper Networks Inc.-JNPR", "Kohl's Corporation-KSS", "F5 Networks Inc.-FFIV", "Zions Bancorporation N.A.-ZION", "Fortune Brands Home & Security Inc.-FBHS", "Interpublic Group of Companies Inc.-IPG", "DISH Network Corporation Class A-DISH", "Apache Corporation-APA", "ABIOMED Inc.-ABMD", "BorgWarner Inc.-BWA", "Apartment Investment and Management Company Class A-AIV", "National Oilwell Varco Inc.-NOV", "Cabot Oil & Gas Corporation-COG", "Franklin Resources Inc.-BEN", "Campbell Soup Company-CPB", "Assurant Inc.-AIZ", "Tapestry Inc.-TPR", "Viacom Inc. Class B-VIAB", "Newell Brands Inc-NWL", "DXC Technology Co.-DXC", "Perrigo Co. Plc-PRGO", "FLIR Systems Inc.-FLIR", "Nielsen Holdings Plc-NLSN", "Mosaic Company-MOS", "A. O. Smith Corporation-AOS", "PVH Corp.-PVH", "Pentair plc-PNR", "SL Green Realty Corp.-SLG", "Robert Half International Inc.-RHI", "Albemarle Corporation-ALB", "People's United Financial Inc.-PBCT", "Invesco Ltd.-IVZ", "Sealed Air Corporation-SEE", "Harley Davidson Inc.-HOG", "Flowserve Corporation-FLS", "Quanta Services Inc.-PWR", "Unum Group-UNM", "Leggett & Platt Incorporated-LEG", "Xerox Holdings Corporation-XRX", "Hanesbrands Inc.-HBI", "DaVita Inc.-DVA", "Rollins Inc.-ROL", "News Corporation Class A-NWSA", "Ralph Lauren Corporation Class A-RL", "Fox Corporation Class B-FOX", "IPG Photonics Corporation-IPGP", "H&R Block Inc.-HRB", "Capri Holdings Limited-CPRI", "Macy's Inc-M", "Cimarex Energy Co.-XEC", "Helmerich & Payne Inc.-HP", "Discovery Inc. Class A-DISCA", "Alliance Data Systems Corporation-ADS", "TripAdvisor Inc.-TRIP", "L Brands Inc.-LB", "Affiliated Managers Group Inc.-AMG", "Nordstrom Inc.-JWN", "Under Armour Inc. Class A-UAA", "Gap Inc.-GPS", "Under Armour Inc. Class C-UA", "Coty Inc. Class A-COTY", "Macerich Company-MAC", "News Corporation Class B-NWS", ];
+    $.each(nameArray, function(i, item) {
+      $("#companies").append($("<option>").attr('value', item));
+    });
+</script>
+<!-- Chart code -->
+<script>
+    var stockSymbol;
+    var api_url;
+    var api_url_2;
+    var api_url_3;
+    var api_url_4;
+    var flag = 0;
+
+    $('#tableauButton').on("click", function(){
+        $('#stockDetailsTableau').show();
+        $('#stockInfo').hide();
+        $('#companyInfo').hide();
+        $('#controls').hide();
+        $('#chartdiv').hide();
+        $('#controls2').hide();
+        $('#chartdiv2').hide();
+        $('#stockInfoTableChart1').hide();
+        $('#stockInfoTableChart2').hide();
+        $('#otherKeyMetrics').hide();
+    });
+
+
+    $('#symbolButton').on("click", function(){
+
+        stockSymbol = document.getElementById('symbolInput').value;
+        stockSymbol = stockSymbol.substring(stockSymbol.indexOf("-") + 1)
+        // console.log(stockSymbol+"---STOCK SYMBOL IS HERE");
+
+        if(stockSymbol == ""){
+            alert('Please enter a company ticker symbol to view stock information!');
+        }
+
+        else{
+            document.getElementById('stockInfoDate').textContent = "";
+            document.getElementById('stockInfoOpen').textContent = "";
+            document.getElementById('stockInfoHigh').textContent = "";
+            document.getElementById('stockInfoLow').textContent = "";
+            document.getElementById('stockInfoClose').textContent = "";
+        
+        
+            api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AAPL&outputsize=full&datatype=csv&apikey=CMYMK104KMXOU134';
+            api_url_2 = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=AAPL&apikey=CMYMK104KMXOU134';
+            api_url_3 = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AAPL&outputsize=full&datatype=csv&apikey=CMYMK104KMXOU134'; 
+            api_url_4 = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AAPL&outputsize=full&datatype=csv&apikey=CMYMK104KMXOU134';
+
+            api_url = api_url.replace("AAPL", stockSymbol);
+            api_url_2 = api_url_2.replace("AAPL", stockSymbol);
+            api_url_3 = api_url_3.replace("AAPL", stockSymbol);
+            api_url_4 = api_url_4.replace("AAPL", stockSymbol);
+
+            // Fetching and Populating Stock Information 
+            fetch(api_url)
+                .then(response => {
+                    return response.text();
+                })
+                .then(data => {
+                    const table = data.split('\n').slice(1);
+                    const recentData = table[0].split(',');
+                    const date = recentData[0];
+
+                    if(data.includes("Error Message")){
+                        flag = 1;
+                        $('#stockInfo').hide();
+                        $('#companyInfo').hide();
+                        $('#controls').hide();
+                        $('#chartdiv').hide();
+                        $('#controls2').hide();
+                        $('#chartdiv2').hide();
+                        $('#stockInfoTableChart1').hide();
+                        $('#stockInfoTableChart2').hide();
+                        $('#otherKeyMetrics').hide();
+                        alert("Please check the input!");
+                    }
+                    else if(data.includes("Thank you for using Alpha Vantage")){
+                        flag = 1;
+                        $('#stockInfo').hide();
+                        $('#companyInfo').hide();
+                        $('#controls').hide();
+                        $('#chartdiv').hide();
+                        $('#controls2').hide();
+                        $('#chartdiv2').hide();
+                        $('#stockInfoTableChart1').hide();
+                        $('#stockInfoTableChart2').hide();
+                        $('#otherKeyMetrics').hide();
+                        alert("Number of Free API calls in 1 minute exhausted. Please wait 1 minute and try again. Thankyou! ");
+                    }
+                    else{
+                        const open = recentData[1];
+                        const high = recentData[2];
+                        const low = recentData[3];
+                        const close = recentData[4];
+
+                        document.getElementById('stockInfoDate').textContent = date;
+                        document.getElementById('stockInfoOpen').textContent = open;
+                        document.getElementById('stockInfoHigh').textContent = high;
+                        document.getElementById('stockInfoLow').textContent = low;
+                        document.getElementById('stockInfoClose').textContent = close;
+                    }
+                
+                })
+
+            // Fetching and Populating all Metrics Information 
+            fetch(api_url_2)
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    const note = data.Note;
+
+                    if(note != null){
+                        flag = 1;
+                        $('#stockInfo').hide();
+                        $('#companyInfo').hide();
+                        $('#controls').hide();
+                        $('#chartdiv').hide();
+                        $('#controls2').hide();
+                        $('#chartdiv2').hide();
+                        $('#stockInfoTableChart1').hide();
+                        $('#stockInfoTableChart2').hide();
+                        $('#otherKeyMetrics').hide();
+                        alert("Number of Free API calls in 1 minute exhausted. Please wait 1 minute and try again. Thankyou!");
+                    }
+
+                    const sym = data.Symbol;
+                    const name = data.Name;
+                    const industry = data.Industry;
+                    const sector = data.Sector;
+                    const country = data.Country;
+                    const exchange = data.Exchange;
+                    const currency = data.Currency;
+                    const address = data.Address;
+                    const beta = data.Beta;
+                    const weekHigh52 = data["52WeekHigh"];
+                    const weekLow52 = data["52WeekLow"];
+                    const dayMovingAverage50 = data["50DayMovingAverage"];
+                    const dayMovingAverage200 = data["200DayMovingAverage"];
+                    const marketCapitalization = data["MarketCapitalization"];
+                    const ePS = data["EPS"];
+                    const revenuePerShareTTM = data["RevenuePerShareTTM"];
+                    const dilutedEPSTTM = data["DilutedEPSTTM"];
+                    const dividendPerShare = data["DividendPerShare"];
+                    const bookValue = data["BookValue"];
+                    const pERatio = data["PERatio"];
+                    const pEGRatio = data["PEGRatio"];
+                    const trailingPE = data["TrailingPE"];
+                    const forwardPE = data["ForwardPE"];
+                    const eVToRevenue = data["EVToRevenue"];
+                    const eVToEBITDA = data["EVToEBITDA"];
+                    const priceToSalesRatioTTM = data["PriceToSalesRatioTTM"];
+                    const priceToBookRatio = data["PriceToBookRatio"];
+                    const revenueTTM = data["RevenueTTM"];
+                    const eBITDA = data["EBITDA"];
+                    const profitMargin = data["ProfitMargin"];
+                    const grossProfitTTM = data["GrossProfitTTM"];
+                    const operatingMarginTTM = data["OperatingMarginTTM"];
+                    const returnOnAssetsTTM = data["ReturnOnAssetsTTM"];
+                    const returnOnEquityTTM = data["ReturnOnEquityTTM"];
+                    const quarterlyEarningsGrowthYOY = data["QuarterlyEarningsGrowthYOY"];
+                    const quarterlyRevenueGrowthYOY = data["QuarterlyRevenueGrowthYOY"];
+                    const forwardAnnualDividendRate = data["ForwardAnnualDividendRate"];
+                    const forwardAnnualDividendYield = data["ForwardAnnualDividendYield"];
+                    const payoutRatio = data["PayoutRatio"];
+                    const dividendDate = data["DividendDate"];
+                    const exDividendDate = data["ExDividendDate"];
+                    const dividendYield = data["DividendYield"];
+                    const sharesOutstanding = data["SharesOutstanding"];
+                    const percentInsiders = data["PercentInsiders"];
+                    const percentInstitutions = data["PercentInstitutions"];
+
+                    document.getElementById('stockInfoName').textContent = name;
+                    document.getElementById('stockInfoSymbol').textContent = sym;
+                    document.getElementById('stockInfoIndustry').textContent = industry;
+                    document.getElementById('stockInfoSector').textContent = sector;
+                    document.getElementById('stockInfoCountry').textContent = country;
+                    document.getElementById('stockInfoExchange').textContent = exchange;
+                    document.getElementById('stockInfoCurrency').textContent = currency;
+                    document.getElementById('stockInfoAddress').textContent = address;
+                    document.getElementById('stockInfoBeta').textContent = beta;
+                    document.getElementById('stockInfo52WeekHigh').textContent = weekHigh52;
+                    document.getElementById('stockInfo52WeekLow').textContent = weekLow52;
+                    document.getElementById('stockInfo50DayMovingAverage').textContent = dayMovingAverage50;
+                    document.getElementById('stockInfo200DayMovingAverage').textContent = dayMovingAverage200;
+                    document.getElementById('stockInfoMarketCapitalization').textContent = marketCapitalization;
+                    document.getElementById('stockInfoEPS').textContent = ePS;
+                    document.getElementById('stockInfoRevenuePerShareTTM').textContent = revenuePerShareTTM;
+                    document.getElementById('stockInfoDilutedEPSTTM').textContent = dilutedEPSTTM;
+                    document.getElementById('stockInfoDividendPerShare').textContent = dividendPerShare;
+                    document.getElementById('stockInfoBookValue').textContent = bookValue;
+                    document.getElementById('stockInfoPERatio').textContent = pERatio;
+                    document.getElementById('stockInfoPEGRatio').textContent = pEGRatio;
+                    document.getElementById('stockInfoTrailingPE').textContent = trailingPE;
+                    document.getElementById('stockInfoForwardPE').textContent = forwardPE;
+                    document.getElementById('stockInfoEVToRevenue').textContent = eVToRevenue;
+                    document.getElementById('stockInfoEVToEBITDA').textContent = eVToEBITDA;
+                    document.getElementById('stockInfoPriceToSalesRatioTTM').textContent = priceToSalesRatioTTM;
+                    document.getElementById('stockInfoPriceToBookRatio').textContent = priceToBookRatio;
+                    document.getElementById('stockInfoRevenueTTM').textContent = revenueTTM;
+                    document.getElementById('stockInfoEBITDA').textContent = eBITDA;
+                    document.getElementById('stockInfoProfitMargin').textContent =profitMargin;
+                    document.getElementById('stockInfoGrossProfitTTM').textContent = grossProfitTTM;
+                    document.getElementById('stockInfoOperatingMarginTTM').textContent = operatingMarginTTM;
+                    document.getElementById('stockInfoReturnOnAssetsTTM').textContent = returnOnAssetsTTM;
+                    document.getElementById('stockInfoReturnOnEquityTTM').textContent = returnOnEquityTTM;
+                    document.getElementById('stockInfoQuarterlyEarningsGrowthYOY').textContent = quarterlyEarningsGrowthYOY;
+                    document.getElementById('stockInfoQuarterlyRevenueGrowthYOY').textContent = quarterlyRevenueGrowthYOY;
+                    document.getElementById('stockInfoDividendPerShare2').textContent = dividendPerShare;
+                    document.getElementById('stockInfoForwardAnnualDividendRate').textContent = forwardAnnualDividendRate;
+                    document.getElementById('stockInfoForwardAnnualDividendYield').textContent = forwardAnnualDividendYield;
+                    document.getElementById('stockInfoPayoutRatio').textContent = payoutRatio;
+                    document.getElementById('stockInfoDividendDate').textContent = dividendDate;
+                    document.getElementById('stockInfoExDividendDate').textContent = exDividendDate;
+                    document.getElementById('stockInfoDividendYield').textContent = dividendYield;
+                    document.getElementById('stockInfoSharesOutstanding').textContent = sharesOutstanding;
+                    document.getElementById('stockInfoPercentInsiders').textContent = percentInsiders;
+                    document.getElementById('stockInfoPercentInstitutions').textContent = percentInstitutions;
+
+            })
+
+            //Building Chart 1
+
+            am4core.ready(function() {
+            
+                // Themes begin
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+                
+                // Create chart
+                var chart = am4core.create("chartdiv", am4charts.XYChart);
+                chart.padding(0, 15, 0, 15);
+                
+                // Load external data
+                chart.dataSource.url = api_url_3; 
+                chart.dataSource.parser = new am4core.CSVParser();
+                chart.dataSource.parser.options.useColumnNames = true;
+                chart.dataSource.parser.options.reverse = true;
+                
+                // the following line makes value axes to be arranged vertically.
+                chart.leftAxesContainer.layout = "vertical";
+                
+                // uncomment this line if you want to change order of axes
+                //chart.bottomAxesContainer.reverseOrder = true;
+                
+                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                dateAxis.renderer.grid.template.location = 0;
+                dateAxis.renderer.ticks.template.length = 8;
+                dateAxis.renderer.ticks.template.strokeOpacity = 0.1;
+                dateAxis.renderer.grid.template.disabled = true;
+                dateAxis.renderer.ticks.template.disabled = false;
+                dateAxis.renderer.ticks.template.strokeOpacity = 0.2;
+                dateAxis.renderer.minLabelPosition = 0.01;
+                dateAxis.renderer.maxLabelPosition = 0.99;
+                dateAxis.keepSelection = true;
+                dateAxis.minHeight = 30;
+                
+                dateAxis.groupData = true;
+                dateAxis.minZoomCount = 5;
+                
+                // these two lines makes the axis to be initially zoomed-in
+                // dateAxis.start = 0.7;
+                // dateAxis.keepSelection = true;
+                
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.tooltip.disabled = true;
+                valueAxis.zIndex = 1;
+                valueAxis.renderer.baseGrid.disabled = true;
+                // height of axis
+                valueAxis.height = am4core.percent(65);
+                
+                valueAxis.renderer.gridContainer.background.fill = am4core.color("#000000");
+                valueAxis.renderer.gridContainer.background.fillOpacity = 0.05;
+                valueAxis.renderer.inside = true;
+                valueAxis.renderer.labels.template.verticalCenter = "bottom";
+                valueAxis.renderer.labels.template.padding(2, 2, 2, 2);
+                
+                //valueAxis.renderer.maxLabelPosition = 0.95;
+                valueAxis.renderer.fontSize = "0.8em"
+                
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.dateX = "timestamp";
+                series.dataFields.valueY = "adjusted_close";
+                series.tooltipText = "{valueY.value}";
+                // series.name = "IBM: Value";
+                series.defaultState.transitionDuration = 0;
+                
+                var valueAxis2 = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis2.tooltip.disabled = true;
+                // height of axis
+                valueAxis2.height = am4core.percent(35);
+                valueAxis2.zIndex = 3
+                // this makes gap between panels
+                valueAxis2.marginTop = 30;
+                valueAxis2.renderer.baseGrid.disabled = true;
+                valueAxis2.renderer.inside = true;
+                valueAxis2.renderer.labels.template.verticalCenter = "bottom";
+                valueAxis2.renderer.labels.template.padding(2, 2, 2, 2);
+                //valueAxis.renderer.maxLabelPosition = 0.95;
+                valueAxis2.renderer.fontSize = "0.8em"
+                
+                valueAxis2.renderer.gridContainer.background.fill = am4core.color("#000000");
+                valueAxis2.renderer.gridContainer.background.fillOpacity = 0.05;
+                
+                var series2 = chart.series.push(new am4charts.ColumnSeries());
+                series2.dataFields.dateX = "timestamp";
+                series2.dataFields.valueY = "volume";
+                series2.yAxis = valueAxis2;
+                series2.tooltipText = "{valueY.value}";
+                // series2.name = "IBM: Volume";
+                // volume should be summed
+                series2.groupFields.valueY = "sum";
+                series2.defaultState.transitionDuration = 0;
+                
+                chart.cursor = new am4charts.XYCursor();
+                
+                var scrollbarX = new am4charts.XYChartScrollbar();
+                scrollbarX.series.push(series);
+                scrollbarX.marginBottom = 20;
+                scrollbarX.scrollbarChart.xAxes.getIndex(0).minHeight = undefined;
+                chart.scrollbarX = scrollbarX;
+                
+                
+                // Add range selector
+                document.getElementById('controls').innerHTML = "";
+                var selector = new am4plugins_rangeSelector.DateAxisRangeSelector();
+                selector.container = document.getElementById("controls");
+                selector.axis = dateAxis;
+            
+            
+            }); // end am4core.ready()
+
+
+            if(flag != 1){
+                $('#stockInfo').show();
+                $('#companyInfo').show();
+                $('#controls').show();
+                $('#chartdiv').show();
+                $('#controls2').show();
+                $('#chartdiv2').show();
+                $('#stockInfoTableChart1').show();
+                $('#stockInfoTableChart2').show();
+                $('#otherKeyMetrics').show();
+                $('#stockDetailsTableau').hide();
+            }
+            
+
+            //Building Chart 2
+            am4core.ready(function() {
+
+                // Themes begin
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+
+                // Create chart
+                var chart = am4core.create("chartdiv2", am4charts.XYChart);
+                chart.padding(0, 15, 0, 15);
+
+                // Load data
+                chart.dataSource.url = api_url_4 ;
+                chart.dataSource.parser = new am4core.CSVParser();
+                chart.dataSource.parser.options.useColumnNames = true;
+                chart.dataSource.parser.options.reverse = true;
+
+                // the following line makes value axes to be arranged vertically.
+                chart.leftAxesContainer.layout = "vertical";
+
+                // uncomment this line if you want to change order of axes
+                //chart.bottomAxesContainer.reverseOrder = true;
+
+                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                dateAxis.renderer.grid.template.location = 0;
+                dateAxis.renderer.ticks.template.length = 8;
+                dateAxis.renderer.ticks.template.strokeOpacity = 0.1;
+                dateAxis.renderer.grid.template.disabled = true;
+                dateAxis.renderer.ticks.template.disabled = false;
+                dateAxis.renderer.ticks.template.strokeOpacity = 0.2;
+                dateAxis.renderer.minLabelPosition = 0.01;
+                dateAxis.renderer.maxLabelPosition = 0.99;
+                dateAxis.keepSelection = true;
+                dateAxis.minHeight = 30;
+
+                dateAxis.groupData = true;
+                dateAxis.minZoomCount = 5;
+
+                // these two lines makes the axis to be initially zoomed-in
+                // dateAxis.start = 0.7;
+                // dateAxis.keepSelection = true;
+
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.tooltip.disabled = true;
+                valueAxis.zIndex = 1;
+                valueAxis.renderer.baseGrid.disabled = true;
+                // height of axis
+                valueAxis.height = am4core.percent(65);
+
+                valueAxis.renderer.gridContainer.background.fill = am4core.color("#000000");
+                valueAxis.renderer.gridContainer.background.fillOpacity = 0.05;
+                valueAxis.renderer.inside = true;
+                valueAxis.renderer.labels.template.verticalCenter = "bottom";
+                valueAxis.renderer.labels.template.padding(2, 2, 2, 2);
+
+                //valueAxis.renderer.maxLabelPosition = 0.95;
+                valueAxis.renderer.fontSize = "0.8em"
+
+                var series = chart.series.push(new am4charts.CandlestickSeries());
+                series.dataFields.dateX = "timestamp";
+                series.dataFields.openValueY = "open";
+                series.dataFields.valueY = "close";
+                series.dataFields.lowValueY = "low";
+                series.dataFields.highValueY = "high";
+                series.clustered = false;
+                series.tooltipText = "open: {openValueY.value}\nlow: {lowValueY.value}\nhigh: {highValueY.value}\nclose: {valueY.value}";
+                //series.name = "MSFT";
+                series.defaultState.transitionDuration = 0;
+
+                var valueAxis2 = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis2.tooltip.disabled = true;
+                // height of axis
+                valueAxis2.height = am4core.percent(35);
+                valueAxis2.zIndex = 3
+                // this makes gap between panels
+                valueAxis2.marginTop = 30;
+                valueAxis2.renderer.baseGrid.disabled = true;
+                valueAxis2.renderer.inside = true;
+                valueAxis2.renderer.labels.template.verticalCenter = "bottom";
+                valueAxis2.renderer.labels.template.padding(2, 2, 2, 2);
+                //valueAxis.renderer.maxLabelPosition = 0.95;
+                valueAxis2.renderer.fontSize = "0.8em"
+
+                valueAxis2.renderer.gridContainer.background.fill = am4core.color("#000000");
+                valueAxis2.renderer.gridContainer.background.fillOpacity = 0.05;
+
+                var series2 = chart.series.push(new am4charts.ColumnSeries());
+                series2.dataFields.dateX = "timestamp";
+                series2.clustered = false;
+                series2.dataFields.valueY = "volume";
+                series2.yAxis = valueAxis2;
+                series2.tooltipText = "{valueY.value}";
+                //series2.name = "Series 2";
+                // volume should be summed
+                series2.groupFields.valueY = "sum";
+                series2.defaultState.transitionDuration = 0;
+
+                chart.cursor = new am4charts.XYCursor();
+
+                var scrollbarX = new am4charts.XYChartScrollbar();
+
+                var sbSeries = chart.series.push(new am4charts.LineSeries());
+                sbSeries.dataFields.valueY = "close";
+                sbSeries.dataFields.dateX = "timestamp";
+                scrollbarX.series.push(sbSeries);
+                sbSeries.disabled = true;
+                scrollbarX.marginBottom = 20;
+                chart.scrollbarX = scrollbarX;
+                scrollbarX.scrollbarChart.xAxes.getIndex(0).minHeight = undefined;
+
+                /**
+                * Set up external controls
+                */
+
+                // Date format to be used in input fields
+                var inputFieldFormat = "yyyy-MM-dd";
+
+                document.getElementById("b1m").addEventListener("click", function() {
+                    var max = dateAxis.groupMax["day1"];
+                    var date = new Date(max);
+                    am4core.time.add(date, "month", -1);
+                    zoomToDates(date);
+                });
+
+                document.getElementById("b3m").addEventListener("click", function() {
+                    var max = dateAxis.groupMax["day1"];
+                    var date = new Date(max);
+                    am4core.time.add(date, "month", -3);
+                    zoomToDates(date);
+                });
+
+                document.getElementById("b6m").addEventListener("click", function() {
+                    var max = dateAxis.groupMax["day1"];
+                    var date = new Date(max);
+                    am4core.time.add(date, "month", -6);
+                    zoomToDates(date);
+                });
+
+                document.getElementById("b1y").addEventListener("click", function() {
+                    var max = dateAxis.groupMax["day1"];
+                    var date = new Date(max);
+                    am4core.time.add(date, "year", -1);
+                    zoomToDates(date);
+                });
+
+                document.getElementById("bytd").addEventListener("click", function() {
+                    var max = dateAxis.groupMax["day1"];
+                    var date = new Date(max);
+                    am4core.time.round(date, "year", 1);
+                    zoomToDates(date);
+                });
+
+                document.getElementById("bmax").addEventListener("click", function() {
+                    var min = dateAxis.groupMin["day1"];
+                    var date = new Date(min);
+                    zoomToDates(date);
+                });
+
+                dateAxis.events.on("selectionextremeschanged", function() {
+                    updateFields();
+                });
+
+                dateAxis.events.on("extremeschanged", updateFields);
+
+                function updateFields() {
+                    var minZoomed = dateAxis.minZoomed + am4core.time.getDuration(dateAxis.mainBaseInterval.timeUnit, dateAxis.mainBaseInterval.count) * 0.5;
+                    document.getElementById("fromfield").value = chart.dateFormatter.format(minZoomed, inputFieldFormat);
+                    document.getElementById("tofield").value = chart.dateFormatter.format(new Date(dateAxis.maxZoomed), inputFieldFormat);
+                }
+
+                document.getElementById("fromfield").addEventListener("keyup", updateZoom);
+                document.getElementById("tofield").addEventListener("keyup", updateZoom);
+
+                var zoomTimeout;
+                function updateZoom() {
+                    if (zoomTimeout) {
+                        clearTimeout(zoomTimeout);
+                    }
+                    zoomTimeout = setTimeout(function() {
+                        var start = document.getElementById("fromfield").value;
+                        var end = document.getElementById("tofield").value;
+                        if ((start.length < inputFieldFormat.length) || (end.length < inputFieldFormat.length)) {
+                        return;
+                        }
+                        var startDate = chart.dateFormatter.parse(start, inputFieldFormat);
+                        var endDate = chart.dateFormatter.parse(end, inputFieldFormat);
+
+                        if (startDate && endDate) {
+                        dateAxis.zoomToDates(startDate, endDate);
+                        }
+                    }, 500);
+                }
+
+                function zoomToDates(date) {
+                    var min = dateAxis.groupMin["day1"];
+                    var max = dateAxis.groupMax["day1"];
+                    dateAxis.keepSelection = true;
+                    //dateAxis.start = (date.getTime() - min)/(max - min);
+                    //dateAxis.end = 1;
+
+                    dateAxis.zoom({start:(date.getTime() - min)/(max - min), end:1});
+                }
+
+            }); // end am4core.ready()
+
+        }    
+        
+    });
+
+</script>
+
+</html>
